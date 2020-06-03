@@ -1,0 +1,5 @@
+ Pop←{ ⍝ Pop off smallest element from a leftist tree ⍵
+     0=≢⍵:⍬
+     (value left right)←1↓⍵
+     (left Merge right)value
+ }

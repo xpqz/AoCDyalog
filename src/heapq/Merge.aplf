@@ -1,0 +1,9 @@
+ Merge←{ ⍝ Merge leftist trees ⍺ and ⍵
+     0=≢⍺:⍵ ⋄ 0=≢⍵:⍺                                 ⍝ If either is a leaf, return the other
+     (item left right)←1↓⍺
+     (⊃⊃item)>⊃⊃(⎕IO+1)⊃⍵:⍵ ∇ ⍺                               ⍝ Flip to ensure smallest is root of merged
+     merged←right ∇ ⍵                                  ⍝ Merge rightwards
+     leftRank←⊃left ⋄ mergedRank←⊃merged
+     leftRank≥⊃merged:(1+mergedRank)item left merged ⍝ Right is shorter
+     (1+leftRank)item merged left                    ⍝ Left is shorter; make it the new right
+ }
