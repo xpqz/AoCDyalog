@@ -1,4 +1,1 @@
- Push←{ ⍝ Insert item ⍵ into leftist tree ⍺, returning the resulting tree
-     ⍺←⍬              ⍝ default to init
-     1 ⍵ ⍬ ⍬ Merge ⍺
- }
+ Push←{⍺←⍬ ⋄ ⍺{0=≢⍵:⍺ ⋄ 1(⊃1↑⍵)⍬ ⍬ Merge ⍺ ∇ 1↓⍵},⍵}
