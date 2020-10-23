@@ -1,0 +1,5 @@
+ Create←{
+     keys←(1500⌶),⍺
+     vals←,⍵
+     {⍵⊣⍵.(Vals Keys Default)←vals keys ⍬}⎕NS''
+ }

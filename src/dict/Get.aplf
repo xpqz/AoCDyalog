@@ -1,0 +1,4 @@
+ Get←{
+     ~⍵ In ⍺:⍺.Default
+     ⍺.Vals[⍺.Keys⍳⍵]
+ }

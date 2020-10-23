@@ -1,0 +1,9 @@
+ Set←{⎕IO←0 ⍝ Upsert ht ⍺ given a vector of keys and a vector of vals
+     ⍺∘{
+         (k v)←⍵
+         i←⍺.Keys⍳k
+         i=≢⍺.Keys:1⊣⍺.Keys,←k⊣⍺.Vals,←v ⍝ New key
+         ⍺.Vals[i]←v                     ⍝ Replace existing
+         0
+     }¨↓⍉↑⍵
+ }
