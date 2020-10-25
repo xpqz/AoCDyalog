@@ -1,0 +1,1 @@
+ UnwindPath←{p←⍺ ⋄ (s e)←⍵ ⋄ ⍬{⍵≡s:⊖⍺ ⋄ (⍺,⍵)∇ p ##.dict.Get ⍵}e}

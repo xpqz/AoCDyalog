@@ -1,39 +1,16 @@
- R←start(neighbours Dijkstra)end;costKeys;costVals;Cost;Seen;StoreCost;cameFromKeys;cameFromVals;frontier;item;current;currentCost;cost;newCost;n;path
- costKeys←1500⌶,start
- costVals←,0
- Cost←{⍵∊costKeys:costVals[⊃costKeys⍳⍵] ⋄ ⌊/⍬}
- cameFromKeys←1500⌶,start
- cameFromVals←start
- frontier←##.heapq.Push⊂0 start
- :While ~##.heapq.Empty frontier
-     (frontier item)←##.heapq.Pop frontier
-     current←2⊃⊃item
-     :If current≡end
-         :Leave
-     :EndIf
-     currentCost←Cost current
-     :For (n cost) :In neighbours current
-         newCost←cost+currentCost
-         :If newCost<Cost⊂n
-             frontier ##.heapq.Push←⊂newCost(⊂n)
-             :If (⊂n)∊costKeys
-                 costVals[⊃costKeys⍳⊂n]←newCost
-             :Else
-                 costKeys,←⊂n
-                 costVals,←newCost
-             :EndIf
-             cameFromKeys,←⊂n
-             cameFromVals,←current
-         :EndIf
-     :EndFor
- :EndWhile
-
- current←end
- path←⍬
- :While ~current≡start
-     path,←current
-     current←cameFromVals[⊃cameFromKeys⍳current]
- :EndWhile
-
- path,←start
- R←⊖path
+Dijkstra←{
+    cost←⍵ ##.dict.Create 0 ⋄ cost.Default←⌊/⍬
+    cameFrom←⍵ ##.dict.Create ⍵
+    Neigh←⍺⍺
+    Pick←{oldCost←cost ##.dict.Get ⍵⋄⍺<oldCost}
+    _←{
+        (queue queueItem)←##.heapq.Pop ⍵
+        current←1⊃queueItem
+        newCost←1+cost ##.dict.Get current
+        valid←(newCost∘Pick¨n)/n←Neigh current             ⍝ New, or better?
+        _←cameFrom ##.dict.Set (valid) ((≢valid)⍴⊂current) ⍝ Update path dictionary
+        _←cost ##.dict.Set (valid) ((≢valid)⍴newCost)      ⍝ Any changed costs
+        queue ##.heapq.Push ↓⍉↑((≢valid)⍴newCost)(valid)   ⍝ Enqueue connected nodes
+    }⍣{##.heapq.Empty ⍺} ##.heapq.Push ⊂0 ⍵
+    cameFrom
+}

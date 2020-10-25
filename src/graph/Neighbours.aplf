@@ -1,5 +1,0 @@
- Neighbours←{
-     idx←⍵~⍨⍸0≠⍵⌷⍺
-     wgt←⍺[⍵;idx]
-     idx,¨wgt
- }

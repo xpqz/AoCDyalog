@@ -1,0 +1,48 @@
+AStar←{
+    ⍝ Generic A* dop. See https://en.wikipedia.org/wiki/A*_search_algorithm
+    ⍝
+    ⍝ Call:
+    ⍝
+    ⍝    paths←start (Nf AStar Heurf) end
+    ⍝
+    ⍝ where 'Nf' should be a function returning connected nodes
+    ⍝ when given a node, and 'Heurf' is the AStar distance
+    ⍝ heuristic which should return a number when called as
+    ⍝
+    ⍝    est←node1 Heurf node2
+    ⍝
+    ⍝ As per the A* spec, the heuristic may over-estimate
+    ⍝ but must not under-estimate the cost of getting from
+    ⍝ node1 to node2. A common heuristic function for grids
+    ⍝ is the Manhattan distance:
+    ⍝
+    ⍝   {+/|(⊃⍺)-⊃⍵}
+    ⍝
+    ⍝ Start and end must be ⊂enclosed, and Nf must return a
+    ⍝ vector of enclosed nodes, for example
+    ⍝
+    ⍝   {⊂¨(⍸×⍺)∩⍵+(¯1 0)(1 0)(0 ¯1)(0 1)}
+    ⍝
+    ⍝ The AStar dop returns the full path dictionary. See
+    ⍝ the function 'UnwindPath' below for how to pick a
+    ⍝ specific path.
+
+    ⍺≡⍵:⍬
+    start←⍺⋄end←⍵
+    cost←start ##.dict.Create 0⋄cost.Default←⌊/⍬
+    cameFrom←start ##.dict.Create start
+    Neigh←⍺⍺ ⋄ Heur←⍵⍵
+    Pick←{oldCost←cost ##.dict.Get ⍵⋄⍺<oldCost}
+    _←{
+        (queue queueItem)←##.heapq.Pop ⍵
+        current←1⊃queueItem
+        newCost←1+cost ##.dict.Get current
+        (newCost+current Heur end)>cost ##.dict.Get end:queue  ⍝ Prune
+        n4←Neigh current                                       ⍝ Find connections
+        valid←(newCost∘Pick¨n4)/n4                             ⍝ New, or better?
+        _←cameFrom ##.dict.Set (valid) ((≢valid)⍴⊂current)     ⍝ Update path dictionary
+        _←cost ##.dict.Set (valid) ((≢valid)⍴newCost)          ⍝ Any changed costs
+        queue ##.heapq.Push ↓⍉↑(newCost+end∘Heur¨valid)(valid) ⍝ Enqueue valid at heuristic cost
+    }⍣{##.heapq.Empty ⍺} ##.heapq.Push ⊂0 start
+    cameFrom
+}
